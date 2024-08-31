@@ -1,16 +1,14 @@
-import { FC, useCallback } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { StoreType } from "../../common/types/storeTypes";
 import useStore from "../../common/store/reactFlowStore";
 import { useShallow } from "zustand/react/shallow";
 
 const selector = (state: StoreType) => ({
-  nodes: state.nodes,
-  edges: state.edges,
-  addNode: state.addNode,
+  check: state.check,
+  getNodeById: state.getNodeById,
   deleteNode: state.deleteNode,
   deleteEdge: state.deleteEdge,
   setZIndexNode: state.setZIndexNode,
-  getNodeById: state.getNodeById,
 });
 
 type ContextMenuType = {
@@ -29,9 +27,10 @@ const ContextMenu: FC<ContextMenuType> = ({
   bottom,
   ...props
 }) => {
-  const { deleteNode, deleteEdge, setZIndexNode } = useStore(
-    useShallow(selector)
-  );
+  const { check, getNodeById, deleteNode, deleteEdge, setZIndexNode } =
+    useStore(useShallow(selector));
+
+  const [parents, setParents] = useState<{ [x: string]: string }>({});
 
   const deleteNd = useCallback(() => {
     deleteNode(id);
@@ -42,6 +41,11 @@ const ContextMenu: FC<ContextMenuType> = ({
     setZIndexNode(1, id);
   }, [id, setZIndexNode]);
 
+  useEffect(() => {
+    console.log(getNodeById(id));
+    setParents(getNodeById(id)?.data?.parents || {});
+  }, [getNodeById, id]);
+
   return (
     <div
       style={{ top, left, right, bottom, backgroundColor: "white" }}
@@ -51,6 +55,14 @@ const ContextMenu: FC<ContextMenuType> = ({
       <p style={{ margin: "0.5em" }}>
         <small>node: {id}</small>
       </p>
+      {Object.keys(parents).map((key) => (
+        <p style={{ margin: "0.5em" }} key={key}>
+          <small>
+            {key} : {parents[key] as string}
+          </small>
+        </p>
+      ))}
+      <button onClick={check}>確認</button>
       <button onClick={deleteNd}>削除</button>
       <button onClick={addZIndexNode}>一つ前</button>
     </div>
