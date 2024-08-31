@@ -44,7 +44,7 @@ const ContextMenu: FC<ContextMenuType> = ({
 
   return (
     <div
-      style={{ top, left, right, bottom, backgroundColor: "black" }}
+      style={{ top, left, right, bottom, backgroundColor: "white" }}
       className="context-menu"
       {...props}
     >

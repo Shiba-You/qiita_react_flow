@@ -1,5 +1,4 @@
-// "use client";
-
+import "./style.css";
 import { FC, useCallback, useRef, useState } from "react";
 import {
   ReactFlow,
