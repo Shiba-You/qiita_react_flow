@@ -42,7 +42,6 @@ const ContextMenu: FC<ContextMenuType> = ({
   }, [id, setZIndexNode]);
 
   useEffect(() => {
-    console.log(getNodeById(id));
     setParents(getNodeById(id)?.data?.parents || {});
   }, [getNodeById, id]);
 
